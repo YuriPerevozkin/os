@@ -73,7 +73,7 @@ a20check:
     mov byte [es:di], 0x00
     mov byte [ds:si], 0xFF
 
-    cmp byte [es:di], 0xFF ; if equal than a20 is disabled
+    cmp byte [es:di], 0xFF ; if equal then a20 is disabled
 
     pop ax
     mov byte [ds:si], al
