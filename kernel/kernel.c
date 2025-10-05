@@ -1,6 +1,8 @@
 #include "drivers/screen.h"
 
 void kernel_entry() {
-    clear_screen();
-    kprint("Hello, World!");
+    uint8_t color = vga_color(BLACK, GREEN);
+
+    init_screen();
+    kprint("Hello, world!\n", color);
 }
