@@ -7,7 +7,8 @@ jmp start
 ; for debugging
 ; %include "boot/debug.asm"
 
-STACK_BASE equ 0x7c00
+STACK_BASE16 equ 0x7c00
+STACK_BASE32 equ 0x90000
 KERNEL_OFFSET equ 0x1000
 BOOT_SIGNATURE equ 0xaa55
 
@@ -51,7 +52,7 @@ start:
     
     ; set up the stack
 
-    mov bp, STACK_BASE
+    mov bp, STACK_BASE16
     mov sp, bp
 
     ; a20.asm
@@ -62,7 +63,7 @@ start:
 
     mov bx, KERNEL_OFFSET
     mov ah, 0x02    ; 0x02 = read
-    mov al, 2       ; number of sectors to read
+    mov al, 3       ; number of sectors to read
     mov ch, 0       ; cylinder
     mov dh, 0       ; head number
     mov cl, 2       ; sector number
@@ -89,7 +90,7 @@ pm_start:
     mov gs, ax
 
     ; and stack
-    mov ebp, 0x90000
+    mov ebp, STACK_BASE32
     mov esp, ebp
 
     call KERNEL_OFFSET ; give control to the kernel!
