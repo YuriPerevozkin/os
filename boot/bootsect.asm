@@ -63,7 +63,7 @@ start:
 
     mov bx, KERNEL_OFFSET
     mov ah, 0x02    ; 0x02 = read
-    mov al, 3       ; number of sectors to read
+    mov al, 4       ; number of sectors to read
     mov ch, 0       ; cylinder
     mov dh, 0       ; head number
     mov cl, 2       ; sector number
