@@ -1,19 +1,25 @@
-SOURCES = $(wildcard kernel/*.c kernel/drivers/*.c kernel/drivers/vga/*.c)
-HEADERS = $(wildcard kernel/*.h)
-OBJ = ${SOURCES:.c=.o}
+DEFAULTARCH=i386
+ARCH?=$(DEFAULTARCH)
 
-CFLAGS = -ffreestanding
-CC = ./.crosscompile/bin/i386-elf-gcc
-LD = ./.crosscompile/bin/i386-elf-ld
+ARCHDIR=arch/$(ARCH)
+INCLUDEDIR=include
 
-image.bin: boot/bootsect.bin kernel.bin
+CFLAGS=-ffreestanding -I$(INCLUDEDIR)
+CC=./.crosscompile/bin/$(ARCH)-elf-gcc
+LD=./.crosscompile/bin/$(ARCH)-elf-ld
+
+include $(ARCHDIR)/make.config
+
+OBJS=\
+	$(ARCHOBJS) \
+	kernel/kernel.o \
+
+image.bin: $(ARCHDIR)/boot/bootsect.bin kernel.bin
 	cat $^ > $@
+	echo $(CFLAGS) | tr ' ' '\n' > compile_flags.txt
 
-kernel.bin: boot/kernel_entry.o ${OBJ}
+kernel.bin: ${OBJS}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
-
-kernel.o: kernel/kernel.c
-	${CC} ${CFLAGS} -c $< -o $@
 
 run: image.bin
 	qemu-system-i386 $<
@@ -29,4 +35,4 @@ run: image.bin
 
 clean:
 	rm *.bin
-	rm kernel/*.o boot/*.o boot/*.bin kernel/drivers/*/*.o kernel/drivers/*.o
+	rm kernel/*.o arch/i386/boot/*.o arch/i386/boot/*.bin arch/i386/*.o arch/i386/vga/*.o

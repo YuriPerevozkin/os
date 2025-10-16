@@ -3,9 +3,9 @@
 
 jmp start
 
-%include "boot/a20.asm"
+%include "arch/i386/boot/a20.asm"
 ; for debugging
-; %include "boot/debug.asm"
+; %include "arch/x86/boot/debug.asm"
 
 STACK_BASE16 equ 0x7c00
 STACK_BASE32 equ 0x90000

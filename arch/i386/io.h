@@ -22,12 +22,21 @@
    SOFTWARE.
 */
 
-#include <stdint.h>
-#include <kernel/tty.h>
-#include <kernel/vga.h>
+#ifndef IO_H
+#define IO_H
 
-void
-kernel_entry() {
-    init_tty();
-    kprint("Hello, world!", vga_color(BLACK, GREEN));
+#include <stdint.h>
+
+static inline void
+outb(uint8_t value, uint16_t port) {
+    __asm__ volatile ("outb %0, %1" : : "a"(value), "Nd"(port));
 }
+
+static inline uint8_t
+inb(uint16_t port) {
+    uint8_t value;
+    __asm__ volatile ("inb %1,%0" : "=a"(value) : "Nd"(port));
+    return value;
+}
+
+#endif

@@ -22,12 +22,15 @@
    SOFTWARE.
 */
 
-#include <stdint.h>
-#include <kernel/tty.h>
-#include <kernel/vga.h>
+#ifndef TTY_H
+#define TTY_H
 
-void
-kernel_entry() {
-    init_tty();
-    kprint("Hello, world!", vga_color(BLACK, GREEN));
-}
+#include <stdint.h>
+#include <stddef.h>
+
+void putchar_at(unsigned char ch, uint8_t color, size_t y, size_t x);
+void putchar(unsigned char ch, uint8_t color);
+void kprint(char* msg, uint8_t color);
+void init_tty();
+
+#endif
